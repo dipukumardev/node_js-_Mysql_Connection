@@ -19,6 +19,9 @@ const db =mysql.createConnection({
 const publicDirectory = path.join(__dirname, './public');
 app.use(express.static(publicDirectory));
 
+// Parse URL -encoded bodues (as send by HTML Forms)
+app.use(express.urlencoded({ extended:false}));
+app.use(express.json());
 
 app.set('view engine', 'hbs');
 
@@ -32,14 +35,11 @@ db.connect((error)=>{
 })
 
 
-app.get("/", (req, res) => {
-    res.render("index");
-});
+// Define Routes;
 
+app.use('/',require('./routes/pages'));
 
-app.get("/register", (req, res) => {
-    res.render("register");
-});
+app.use('/auth', require('./routes/auth'));
    
 app.listen(3000, ()=>{
     console.log("Server stated on port 3000");
